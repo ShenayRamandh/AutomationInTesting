@@ -149,4 +149,35 @@ public class Reservation(IWebDriver driver)
             phoneField.SendKeys(text);
         }
     }
+    
+    public IList<string> GetErrorMessages()
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        var errorContainer = wait.Until(driverInstance =>
+        {
+            try
+            {
+                var element = driverInstance.FindElement(By.CssSelector("div.alert.alert-danger"));
+                return element.Displayed ? element : null;
+            }
+            catch (NoSuchElementException)
+            {
+                return null;
+            }
+        });
+
+        if (errorContainer == null)
+        {
+            throw new Exception("Error container not found on the webpage.");
+        }
+
+        var errorMessages = errorContainer
+            .FindElements(By.TagName("li"))
+            .Select(e => e.Text)
+            .ToList();
+
+        return errorMessages;
+    }
+
 }

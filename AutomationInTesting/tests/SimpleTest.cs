@@ -10,7 +10,6 @@ public class SimpleTest : TestBase
     public void ShouldLaunchAutomationTestingHomePage()
     {
         Repository.NavigateToUrl(BaseUrl);
-        Repository.ClickBookNowButton();
+        Repository.Reservation.ClickBookNowButton();
     }
-
 }

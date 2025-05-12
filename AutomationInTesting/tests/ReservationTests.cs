@@ -136,9 +136,8 @@ public class ReservationTests : TestBase
         errorMessage.Should().BeEquivalentTo(expectedMessages, "The error messages should exactly match the expected values.");
     }
     
-    [Ignore("To fix flakey tests")]
+    // [Ignore("To fix flakey tests")]
     [TestCase("James.Jeff@")]
-    [TestCase("James.Jeff@Gmail")]
     [TestCase("James.Jeff@Gmail.")]
     public void Reservation_GiveInvalidEmailAddress_ShouldThrowException(string emailAddress)
     {

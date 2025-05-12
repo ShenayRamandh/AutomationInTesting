@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 namespace AutomationInTesting.Infrastructure;
@@ -28,6 +30,20 @@ public class TestBase : IDisposable
         _driver.Manage().Window.Maximize();
         
         Repository = new Repository.Repository(_driver);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        if (TestContext.CurrentContext.Result.Outcome.Status != TestStatus.Failed) return;
+        var screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
+        var screenshotDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, "Screenshots");
+        Directory.CreateDirectory(screenshotDirectory);
+            
+        var fileName = $"{TestContext.CurrentContext.Test.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+        var filePath = Path.Combine(screenshotDirectory, fileName);
+        screenshot.SaveAsFile(filePath);
+        TestContext.AddTestAttachment(filePath);
     }
 
     public void Dispose()

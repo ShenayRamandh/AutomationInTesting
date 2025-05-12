@@ -1,0 +1,72 @@
+﻿name: Selenium Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  selenium-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install ChromeDriver
+        run: |
+          chrome_version=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
+          latest_driver_version=$(wget -qO- "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$chrome_version")
+          wget -q "https://storage.googleapis.com/chrome-for-testing-public/$latest_driver_version/linux64/chromedriver-linux64.zip"
+          unzip chromedriver-linux64.zip
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build the project
+        run: dotnet build --configuration Release
+
+      - name: Run Selenium tests
+        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx"
+        env:
+          DISPLAY: ':99'
+
+      - name: Publish Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: "**/TestResults/*.trx"
+
+      - name: Test Reporter
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: NUnit Tests
+          path: '**/TestResults/*.trx'
+          reporter: dotnet-trx
+          fail-on-error: true
+
+      - name: Upload Test Failure Screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-failure-screenshots
+          path: |
+            **/TestResults/screenshots/**
+            **/bin/**/Screenshots/**

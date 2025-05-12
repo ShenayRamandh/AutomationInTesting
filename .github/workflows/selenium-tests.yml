@@ -46,12 +46,14 @@ jobs:
         env:
           DISPLAY: ':99'
 
-      - name: Publish Selenium Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Test Reporter for Selenium
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
         with:
-          name: selenium-test-results
-          path: "**/TestResults/*.trx"
+          name: Selenium Tests
+          path: '**/TestResults/*.trx'
+          reporter: dotnet-trx
+          fail-on-error: true
 
   api-tests:
     runs-on: ubuntu-latest
@@ -74,9 +76,11 @@ jobs:
       - name: Run API tests
         run: dotnet test --configuration Release --filter "Category=API" --logger "trx;LogFileName=api-test-results.trx"
 
-      - name: Publish API Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Test Reporter for API
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
         with:
-          name: api-test-results
-          path: "**/TestResults/*.trx"
+          name: API Tests
+          path: '**/TestResults/*.trx'
+          reporter: dotnet-trx
+          fail-on-error: true

@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace AutomationInTesting.Infrastructure.Repository;
+namespace AutomationInTesting.UI.Infrastructure.Repository;
 
 public class Reservation(IWebDriver driver)
 {
@@ -23,7 +23,7 @@ public class Reservation(IWebDriver driver)
         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", bookNowButton);
         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", bookNowButton);
     }
-    
+
     public void ClickReserveButton()
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -50,7 +50,7 @@ public class Reservation(IWebDriver driver)
             throw new Exception("Reserve button is not available within the given wait time.");
         }
     }
-    
+
     public void ClickReserveNowButton()
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -73,11 +73,11 @@ public class Reservation(IWebDriver driver)
         {
             throw new Exception("Reserve Now button is not available within the given wait time.");
         }
-    
+
         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", reserveNowButton);
         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", reserveNowButton);
     }
-    
+
     public void EnterFirstName(string? text = null)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -95,43 +95,43 @@ public class Reservation(IWebDriver driver)
             firstnameField.SendKeys(text);
         }
     }
-    
+
     public void EnterLastName(string? text = null)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-    
+
         var lastnameField = wait.Until(driverInstance =>
         {
             var element = driverInstance.FindElement(By.Name("lastname"));
             return element is { Displayed: true, Enabled: true } ? element : null;
         });
-    
+
         lastnameField.Clear();
-    
+
         if (!string.IsNullOrEmpty(text))
         {
             lastnameField.SendKeys(text);
         }
     }
-    
+
     public void EnterEmail(string? text = null)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-    
+
         var emailField = wait.Until(driverInstance =>
         {
             var element = driverInstance.FindElement(By.Name("email"));
             return element is { Displayed: true, Enabled: true } ? element : null;
         });
-    
+
         emailField.Clear();
-    
+
         if (!string.IsNullOrEmpty(text))
         {
             emailField.SendKeys(text);
         }
     }
-    
+
     public void EnterPhone(string? text = null)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -149,7 +149,7 @@ public class Reservation(IWebDriver driver)
             phoneField.SendKeys(text);
         }
     }
-    
+
     public IList<string> GetErrorMessages()
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -179,5 +179,4 @@ public class Reservation(IWebDriver driver)
 
         return errorMessages;
     }
-
 }

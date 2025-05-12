@@ -1,12 +1,37 @@
-﻿using AutomationInTesting.Infrastructure;
+﻿using AutomationInTesting.UI.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace AutomationInTesting.tests;
+namespace AutomationInTesting.UI.tests;
 
 [TestFixture]
 public class ReservationTests : TestBase
 {
+    [Test]
+    public void Reservation_GivenValidBookingDetails_ShouldSuccessfulBookRoom()
+    {
+        // Arrange
+        Repository.NavigateToUrl(BaseUrl);
+        Repository.Reservation.ClickBookNowButton();
+        Repository.Reservation.ClickReserveButton();
+        
+        // Act
+        Repository.Reservation.EnterFirstName("Jamhs");
+        Repository.Reservation.EnterLastName("sssfdds");
+        Repository.Reservation.EnterEmail("Jamesdsf@gmail.com");
+        Repository.Reservation.EnterPhone("12457898653");
+        Repository.Reservation.ClickReserveNowButton();
+        
+        // Assert
+        var errorMessage = Repository.Reservation.GetErrorMessages();
+        var expectedMessages = new[]
+        {
+            "size must be between 11 and 21"
+        };
+
+        errorMessage.Should().BeEquivalentTo(expectedMessages, "The error messages should exactly match the expected values.");
+    }
+    
     [Test]
     public void Reservation_GiveNullFirstName_ShouldThrowException()
     {
@@ -136,7 +161,6 @@ public class ReservationTests : TestBase
         errorMessage.Should().BeEquivalentTo(expectedMessages, "The error messages should exactly match the expected values.");
     }
     
-    // [Ignore("To fix flakey tests")]
     [TestCase("James.Jeff@")]
     [TestCase("James.Jeff@Gmail.")]
     public void Reservation_GiveInvalidEmailAddress_ShouldThrowException(string emailAddress)

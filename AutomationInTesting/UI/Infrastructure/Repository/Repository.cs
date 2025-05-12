@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace AutomationInTesting.Infrastructure.Repository;
+namespace AutomationInTesting.UI.Infrastructure.Repository;
 
 public class Repository
 {

@@ -3,7 +3,7 @@ using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace AutomationInTesting.Infrastructure;
+namespace AutomationInTesting.UI.Infrastructure;
 
 public class TestBase : IDisposable
 {

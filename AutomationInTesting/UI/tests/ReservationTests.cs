@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace AutomationInTesting.UI.tests;
 
 [TestFixture]
+[Category("Selenium")]
 public class ReservationTests : TestBase
 {
     [Test]

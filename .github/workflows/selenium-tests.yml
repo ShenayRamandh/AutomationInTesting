@@ -42,15 +42,16 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run Selenium tests
-        run: dotnet test --configuration Release --filter "Category=Selenium" --logger "trx;LogFileName=selenium-test-results.trx"
-        env:
-          DISPLAY: ':99'
+        run: |
+          echo "::group::Selenium Test Results"
+          dotnet test --configuration Release --filter "Category=Selenium" --logger "trx;LogFileName=selenium-test-results.trx"
+          echo "::endgroup::"
 
       - name: Test Reporter for Selenium
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: Selenium Tests
+          name: Selenium Test Results
           path: '**/TestResults/*.trx'
           reporter: dotnet-trx
           fail-on-error: true
@@ -74,13 +75,16 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run API tests
-        run: dotnet test --configuration Release --filter "Category=API" --logger "trx;LogFileName=api-test-results.trx"
+        run: |
+          echo "::group::API Test Results"
+          dotnet test --configuration Release --filter "Category=API" --logger "trx;LogFileName=api-test-results.trx"
+          echo "::endgroup::"
 
       - name: Test Reporter for API
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: API Tests
+          name: API Test Results
           path: '**/TestResults/*.trx'
           reporter: dotnet-trx
           fail-on-error: true

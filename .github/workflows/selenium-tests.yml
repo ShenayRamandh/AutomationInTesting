@@ -17,21 +17,18 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Install Edge
+      - name: Install Chrome
         run: |
-          curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-          sudo install -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/
-          sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-stable.list'
           sudo apt-get update
-          sudo apt-get install microsoft-edge-stable
+          sudo apt-get install -y google-chrome-stable
 
-      - name: Install Edge WebDriver
+      - name: Install ChromeDriver
         run: |
-          EDGE_VERSION=$(microsoft-edge --version | cut -d' ' -f3)
-          wget https://msedgedriver.azureedge.net/$EDGE_VERSION/edgedriver_linux64.zip
-          unzip edgedriver_linux64.zip
-          sudo mv msedgedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/msedgedriver
+          CHROME_VERSION=$(google-chrome --version | cut -d ' ' -f3 | cut -d '.' -f1)
+          wget -q "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_VERSION.0.6261.94/linux64/chromedriver-linux64.zip"
+          unzip chromedriver-linux64.zip
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
 
       - name: Install dependencies
         run: dotnet restore

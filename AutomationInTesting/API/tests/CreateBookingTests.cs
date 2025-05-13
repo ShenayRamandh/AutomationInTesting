@@ -37,6 +37,23 @@ public class CreateBookingTests : TestBase
         responseData.Booking.AdditionalNeeds.Should().Be(requestBody.AdditionalNeeds);
     }
     
+    [Test]
+    public async Task CreateBooking_GivenNoBody_ShouldThrowValidationError()
+    {
+        // Arrange
+        var requestBody = new BookingRequest();
+        
+        // Act
+        var response = await PostAsync("booking", requestBody);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+
+        var responseData = await response.Content.ReadAsStringAsync();
+
+        responseData.Should().Be("Internal Server Error");
+    }
+    
     [Ignore("This test is suppose to fail as the firstName is an empty string but still creates the booking.")]
     [Test]
     public async Task CreateBooking_GivenInvalidFirstName_ShouldThrowValidationError()

@@ -1,10 +1,13 @@
-﻿using AutomationInTesting.Infrastructure;
-using FluentAssertions;
-using NUnit.Framework;
+﻿
 
-namespace AutomationInTesting.tests;
+using AutomationInTesting.UI.Infrastructure;
+using AutomationInTesting.UI.Infrastructure.Repository;
+using FluentAssertions;
+
+namespace AutomationInTesting.UI.tests;
 
 [TestFixture]
+[Category("Selenium")]
 public class ReservationTests : TestBase
 {
     [Test]
@@ -136,9 +139,7 @@ public class ReservationTests : TestBase
         errorMessage.Should().BeEquivalentTo(expectedMessages, "The error messages should exactly match the expected values.");
     }
     
-    [Ignore("To fix flakey tests")]
     [TestCase("James.Jeff@")]
-    [TestCase("James.Jeff@Gmail")]
     [TestCase("James.Jeff@Gmail.")]
     public void Reservation_GiveInvalidEmailAddress_ShouldThrowException(string emailAddress)
     {

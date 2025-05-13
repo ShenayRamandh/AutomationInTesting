@@ -1,4 +1,4 @@
-﻿name: Selenium Tests
+﻿name: Selenium and API Tests
 
 on:
   push:
@@ -42,31 +42,49 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run Selenium tests
-        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx"
-        env:
-          DISPLAY: ':99'
+        run: |
+          echo "::group::Selenium Test Results"
+          dotnet test --configuration Release --filter "Category=Selenium" --logger "trx;LogFileName=selenium-test-results.trx"
+          echo "::endgroup::"
 
-      - name: Publish Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: "**/TestResults/*.trx"
-
-      - name: Test Reporter
+      - name: Test Reporter for Selenium
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: NUnit Tests
+          name: Selenium Test Results
           path: '**/TestResults/*.trx'
           reporter: dotnet-trx
           fail-on-error: true
 
-      - name: Upload Test Failure Screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
         with:
-          name: test-failure-screenshots
-          path: |
-            **/TestResults/screenshots/**
-            **/bin/**/Screenshots/**
+          dotnet-version: '9.0.x'
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build the project
+        run: dotnet build --configuration Release
+
+      - name: Run API tests
+        run: |
+          echo "::group::API Test Results"
+          dotnet test --configuration Release --filter "Category=API" --logger "trx;LogFileName=api-test-results.trx"
+          echo "::endgroup::"
+
+      - name: Test Reporter for API
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: API Test Results
+          path: '**/TestResults/*.trx'
+          reporter: dotnet-trx
+          fail-on-error: true

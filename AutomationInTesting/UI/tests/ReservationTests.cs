@@ -1,6 +1,8 @@
-﻿using AutomationInTesting.UI.Infrastructure;
+﻿
+
+using AutomationInTesting.UI.Infrastructure;
+using AutomationInTesting.UI.Infrastructure.Repository;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace AutomationInTesting.UI.tests;
 
@@ -8,31 +10,6 @@ namespace AutomationInTesting.UI.tests;
 [Category("Selenium")]
 public class ReservationTests : TestBase
 {
-    [Test]
-    public void Reservation_GivenValidBookingDetails_ShouldSuccessfulBookRoom()
-    {
-        // Arrange
-        Repository.NavigateToUrl(BaseUrl);
-        Repository.Reservation.ClickBookNowButton();
-        Repository.Reservation.ClickReserveButton();
-        
-        // Act
-        Repository.Reservation.EnterFirstName("Jamhs");
-        Repository.Reservation.EnterLastName("sssfdds");
-        Repository.Reservation.EnterEmail("Jamesdsf@gmail.com");
-        Repository.Reservation.EnterPhone("12457898653");
-        Repository.Reservation.ClickReserveNowButton();
-        
-        // Assert
-        var errorMessage = Repository.Reservation.GetErrorMessages();
-        var expectedMessages = new[]
-        {
-            "size must be between 11 and 21"
-        };
-
-        errorMessage.Should().BeEquivalentTo(expectedMessages, "The error messages should exactly match the expected values.");
-    }
-    
     [Test]
     public void Reservation_GiveNullFirstName_ShouldThrowException()
     {

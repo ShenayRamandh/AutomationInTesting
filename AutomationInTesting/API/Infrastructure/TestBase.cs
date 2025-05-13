@@ -26,6 +26,8 @@ public class TestBase
     protected async Task<HttpResponseMessage> PostAsync(string endpoint, object requestBody)
     {
         var content = CreateJsonContent(requestBody);
+        _httpClient.DefaultRequestHeaders.Accept.Clear();
+        _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("*/*"));
         return await _httpClient.PostAsync(endpoint, content);
     }
 

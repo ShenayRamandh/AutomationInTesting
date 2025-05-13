@@ -6,6 +6,8 @@ using FluentAssertions;
 
 namespace AutomationInTesting.API.tests;
 
+[TestFixture]
+[Category("API")]
 public class DeleteBookingTests : TestBase
 {
     [Test]

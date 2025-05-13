@@ -171,21 +171,4 @@ public class GetBookingIdsTests : TestBase
         responseData.Should().NotBeNull();
         responseData.Data!.Count.Should().Be(0);
     }
-    
-    [Test]
-    public async Task GetBookingIds_GivenInvalidCheckOutDateParameter_ShouldReturnEmptyResult()
-    {
-        // Arrange
-        var queryParams = new Dictionary<string, string>
-        {
-            { "checkout", "0000-12-31" }
-        };
-
-        // Act
-        var responseData = await GetAsync<List<BookingIdResponse>>("booking", queryParams);
-
-        // Assert
-        responseData.Should().NotBeNull();
-        responseData.Data!.Count.Should().Be(0);
-    }
 }

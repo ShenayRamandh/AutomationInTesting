@@ -48,6 +48,18 @@ public class TestBase
 
         return new ApiResponse<T>(data, response);
     }
+    
+    protected async Task<HttpResponseMessage> DeleteAsync(string endpoint, string? token = null)
+    {
+        _httpClient.DefaultRequestHeaders.Clear();
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            _httpClient.DefaultRequestHeaders.Add("Cookie", $"token={token}");
+        }
+
+        return await _httpClient.DeleteAsync(endpoint);
+    }
 
     protected async Task<T?> DeserializeResponseAsync<T>(HttpResponseMessage response)
     {
